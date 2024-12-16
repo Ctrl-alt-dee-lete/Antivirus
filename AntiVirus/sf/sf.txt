@@ -1,0 +1,299 @@
+C:\\$Recycle.Bin
+C:\\$Windows.~WS
+C:\\Config.Msi
+C:\\DumpStack.log
+C:\\DumpStack.log.tmp
+C:\\hiberfil.sys
+C:\\nsispromotion_log.txt
+C:\\pagefile.sys
+C:\\swapfile.sys
+C:\\$Recycle.Bin\S-1-5-18
+C:\\$Recycle.Bin\S-1-5-21-3377332054-2319111049-2090427228-1000
+C:\\$Recycle.Bin\S-1-5-21-3377332054-2319111049-2090427228-1001
+C:\\$Recycle.Bin\S-1-5-21-3377332054-2319111049-2090427228-1004
+C:\\$Recycle.Bin\S-1-5-21-3377332054-2319111049-2090427228-1006
+C:\\$Windows.~WS\Sources
+C:\\admin\adminfinder.pl
+C:\\Big Sur dock Icons\7-zip.png
+C:\\Big Sur dock Icons\9gag.png
+C:\\Big Sur dock Icons\Activity Monitor.png
+C:\\Big Sur dock Icons\Affinity Designer.png
+C:\\Big Sur dock Icons\Affinity Photo.png
+C:\\Big Sur dock Icons\Affinity_Publisher.png
+C:\\Big Sur dock Icons\Airport Utility.png
+C:\\Big Sur dock Icons\amazon.png
+C:\\Big Sur dock Icons\anydesk.png
+C:\\Big Sur dock Icons\aol.png
+C:\\Big Sur dock Icons\App Store.png
+C:\\Big Sur dock Icons\Apple Music.png
+C:\\Big Sur dock Icons\Apple TV.png
+C:\\Big Sur dock Icons\Apple.png
+C:\\Big Sur dock Icons\ArsTechnica.png
+C:\\Big Sur dock Icons\audacity.png
+C:\\Big Sur dock Icons\Audio.png
+C:\\Big Sur dock Icons\Automator.png
+C:\\Big Sur dock Icons\Baidu.png
+C:\\Big Sur dock Icons\battlenet.png
+C:\\Big Sur dock Icons\bbc.png
+C:\\Big Sur dock Icons\bing.png
+C:\\Big Sur dock Icons\Blank.png
+C:\\Big Sur dock Icons\blender.png
+C:\\Big Sur dock Icons\Blogger.png
+C:\\Big Sur dock Icons\Books.png
+C:\\Big Sur dock Icons\boxee.png
+C:\\Big Sur dock Icons\Brave.png
+C:\\Big Sur dock Icons\businessinsider.png
+C:\\Big Sur dock Icons\Calculator.png
+C:\\Big Sur dock Icons\Calendar.png
+C:\\Big Sur dock Icons\camera.png
+C:\\Big Sur dock Icons\CD.png
+C:\\Big Sur dock Icons\Chess.png
+C:\\Big Sur dock Icons\chip.de.png
+C:\\Big Sur dock Icons\chrome.png
+C:\\Big Sur dock Icons\Clock.png
+C:\\Big Sur dock Icons\cnet.png
+C:\\Big Sur dock Icons\cnn.png
+C:\\Big Sur dock Icons\color sync.png
+C:\\Big Sur dock Icons\computermanagement.png
+C:\\Big Sur dock Icons\Console.png
+C:\\Big Sur dock Icons\Contacts.png
+C:\\Big Sur dock Icons\Control.png
+C:\\Big Sur dock Icons\cracked.png
+C:\\Big Sur dock Icons\craigslist.png
+C:\\Big Sur dock Icons\custom.png
+C:\\Big Sur dock Icons\darkmode.png
+C:\\Big Sur dock Icons\Delicious.png
+C:\\Big Sur dock Icons\DesignFloat.png
+C:\\Big Sur dock Icons\Desktop.png
+C:\\Big Sur dock Icons\Develop.png
+C:\\Big Sur dock Icons\deviantart.png
+C:\\Big Sur dock Icons\Dictionary.png
+C:\\Big Sur dock Icons\Digg.png
+C:\\Big Sur dock Icons\Diigo.png
+C:\\Big Sur dock Icons\discord.png
+C:\\Big Sur dock Icons\Displaperture.png
+C:\\Big Sur dock Icons\dribbble.png
+C:\\Big Sur dock Icons\Dropbox.png
+C:\\Big Sur dock Icons\ebay.png
+C:\\Big Sur dock Icons\edge (2).png
+C:\\Big Sur dock Icons\Edge.png
+C:\\Big Sur dock Icons\engadget.png
+C:\\Big Sur dock Icons\epicgames.png
+C:\\Big Sur dock Icons\espn.png
+C:\\Big Sur dock Icons\essentials.png
+C:\\Big Sur dock Icons\eventviewer.png
+C:\\Big Sur dock Icons\evernote.png
+C:\\Big Sur dock Icons\excel.png
+C:\\Big Sur dock Icons\explosm.png
+C:\\Big Sur dock Icons\Facebook.png
+C:\\Big Sur dock Icons\Facebook_Messenger.png
+C:\\Big Sur dock Icons\Facetime.png
+C:\\Big Sur dock Icons\fandom.png
+C:\\Big Sur dock Icons\Feedburner.png
+C:\\Big Sur dock Icons\Figma.png
+C:\\Big Sur dock Icons\filezilla.png
+C:\\Big Sur dock Icons\Finder.png
+C:\\Big Sur dock Icons\Firefox.png
+C:\\Big Sur dock Icons\Flickr.png
+C:\\Big Sur dock Icons\folder 3d.png
+C:\\Big Sur dock Icons\folder books.png
+C:\\Big Sur dock Icons\folder cloud.png
+C:\\Big Sur dock Icons\folder desktop.png
+C:\\Big Sur dock Icons\folder docs.png
+C:\\Big Sur dock Icons\folder downloads.png
+C:\\Big Sur dock Icons\folder games.png
+C:\\Big Sur dock Icons\folder home.png
+C:\\Big Sur dock Icons\folder library.png
+C:\\Big Sur dock Icons\folder music.png
+C:\\Big Sur dock Icons\folder pictures.png
+C:\\Big Sur dock Icons\Folder Smart.png
+C:\\Big Sur dock Icons\folder user.png
+C:\\Big Sur dock Icons\folder videos.png
+C:\\Big Sur dock Icons\font book.png
+C:\\Big Sur dock Icons\Foobar.png
+C:\\Big Sur dock Icons\forbes.png
+C:\\Big Sur dock Icons\fox news.png
+C:\\Big Sur dock Icons\FriendFeed.png
+C:\\Big Sur dock Icons\Friendster.png
+C:\\Big Sur dock Icons\geektyper.png
+C:\\Big Sur dock Icons\gimp.png
+C:\\Big Sur dock Icons\github.png
+C:\\Big Sur dock Icons\gmail.png
+C:\\Big Sur dock Icons\godfolder.png
+C:\\Big Sur dock Icons\gog.png
+C:\\Big Sur dock Icons\google chrome.png
+C:\\Big Sur dock Icons\google.png
+C:\\Big Sur dock Icons\googledrive.png
+C:\\Big Sur dock Icons\googlemaps.png
+C:\\Big Sur dock Icons\googleplus.png
+C:\\Big Sur dock Icons\googlesearch.png
+C:\\Big Sur dock Icons\GoogleTalk.png
+C:\\Big Sur dock Icons\Google_Chrome 2.png
+C:\\Big Sur dock Icons\Google_Drive.png
+C:\\Big Sur dock Icons\Google_Gmail.png
+C:\\Big Sur dock Icons\Google_Maps.png
+C:\\Big Sur dock Icons\Google_Photos.png
+C:\\Big Sur dock Icons\Grooveshark.png
+C:\\Big Sur dock Icons\hardware (2).png
+C:\\Big Sur dock Icons\Hardware.png
+C:\\Big Sur dock Icons\HD.png
+C:\\Big Sur dock Icons\hi5.png
+C:\\Big Sur dock Icons\Home.png
+C:\\Big Sur dock Icons\hulu.png
+C:\\Big Sur dock Icons\Icons_8.png
+C:\\Big Sur dock Icons\iConvert.png
+C:\\Big Sur dock Icons\iConvertIcons.png
+C:\\Big Sur dock Icons\illustrator.png
+C:\\Big Sur dock Icons\imdb.png
+C:\\Big Sur dock Icons\indeed.png
+C:\\Big Sur dock Icons\indesign.png
+C:\\Big Sur dock Icons\Instagram.png
+C:\\Big Sur dock Icons\Itch.png
+C:\\Big Sur dock Icons\key closed.png
+C:\\Big Sur dock Icons\keynote.png
+C:\\Big Sur dock Icons\keys open.png
+C:\\Big Sur dock Icons\keys.png
+C:\\Big Sur dock Icons\LastFM.png
+C:\\Big Sur dock Icons\Launchpad.png
+C:\\Big Sur dock Icons\Launchpad_Alt.png
+C:\\Big Sur dock Icons\lightmode.png
+C:\\Big Sur dock Icons\lightroom.png
+C:\\Big Sur dock Icons\linkedin.png
+C:\\Big Sur dock Icons\live.png
+C:\\Big Sur dock Icons\LiveJournal.png
+C:\\Big Sur dock Icons\LogMeIn.png
+C:\\Big Sur dock Icons\lolmatrix.png
+C:\\Big Sur dock Icons\Mail.png
+C:\\Big Sur dock Icons\MailRu.png
+C:\\Big Sur dock Icons\malwarebytes.png
+C:\\Big Sur dock Icons\Maps.png
+C:\\Big Sur dock Icons\Mashable.png
+C:\\Big Sur dock Icons\Messages.png
+C:\\Big Sur dock Icons\Microsoft_OneDrive.png
+C:\\Big Sur dock Icons\Migrate.png
+C:\\Big Sur dock Icons\Minecraft.png
+C:\\Big Sur dock Icons\Mission Control ALT.png
+C:\\Big Sur dock Icons\Mission Control.png
+C:\\Big Sur dock Icons\msn.png
+C:\\Big Sur dock Icons\msnbc.png
+C:\\Big Sur dock Icons\Music.png
+C:\\Big Sur dock Icons\mySpace.png
+C:\\Big Sur dock Icons\netflix.png
+C:\\Big Sur dock Icons\Netvibes.png
+C:\\Big Sur dock Icons\News.png
+C:\\Big Sur dock Icons\newscientist.png
+C:\\Big Sur dock Icons\Newsvine.png
+C:\\Big Sur dock Icons\Notes.png
+C:\\Big Sur dock Icons\nothingtohide.png
+C:\\Big Sur dock Icons\nytime.png
+C:\\Big Sur dock Icons\onenote.png
+C:\\Big Sur dock Icons\opera.png
+C:\\Big Sur dock Icons\Origin.png
+C:\\Big Sur dock Icons\Orkut.png
+C:\\Big Sur dock Icons\outlook.png
+C:\\Big Sur dock Icons\paint.png
+C:\\Big Sur dock Icons\Paypal.png
+C:\\Big Sur dock Icons\Phone Booth.png
+C:\\Big Sur dock Icons\Photos.png
+C:\\Big Sur dock Icons\photoshop.png
+C:\\Big Sur dock Icons\Picasa.png
+C:\\Big Sur dock Icons\Pichon.png
+C:\\Big Sur dock Icons\pinterest.png
+C:\\Big Sur dock Icons\Play.png
+C:\\Big Sur dock Icons\plex.png
+C:\\Big Sur dock Icons\Podcasts.png
+C:\\Big Sur dock Icons\popurls.png
+C:\\Big Sur dock Icons\Posterous.png
+C:\\Big Sur dock Icons\powerpoint.png
+C:\\Big Sur dock Icons\powershell.png
+C:\\Big Sur dock Icons\Preview.png
+C:\\Big Sur dock Icons\qBittorrent.png
+C:\\Big Sur dock Icons\Quicktime.png
+C:\\Big Sur dock Icons\rainmeter.png
+C:\\Big Sur dock Icons\Reddit.png
+C:\\Big Sur dock Icons\Reminders.png
+C:\\Big Sur dock Icons\resourcemonitor.png
+C:\\Big Sur dock Icons\rockstar.png
+C:\\Big Sur dock Icons\Safari.png
+C:\\Big Sur dock Icons\Screenshot.png
+C:\\Big Sur dock Icons\Scribd.png
+C:\\Big Sur dock Icons\Settings.png
+C:\\Big Sur dock Icons\Siri.png
+C:\\Big Sur dock Icons\skype.png
+C:\\Big Sur dock Icons\Slack.png
+C:\\Big Sur dock Icons\Slashdot.png
+C:\\Big Sur dock Icons\smbc.png
+C:\\Big Sur dock Icons\SoundCloud.png
+C:\\Big Sur dock Icons\Spotify.png
+C:\\Big Sur dock Icons\SpringPad.png
+C:\\Big Sur dock Icons\Spurl.png
+C:\\Big Sur dock Icons\stackoverflow.png
+C:\\Big Sur dock Icons\Steam.png
+C:\\Big Sur dock Icons\stickynotes.png
+C:\\Big Sur dock Icons\Stocks.png
+C:\\Big Sur dock Icons\StumbleUpon.png
+C:\\Big Sur dock Icons\Sublime Text.png
+C:\\Big Sur dock Icons\taskscheduler.png
+C:\\Big Sur dock Icons\teams.png
+C:\\Big Sur dock Icons\teamviewer.png
+C:\\Big Sur dock Icons\Technorati.png
+C:\\Big Sur dock Icons\ted.png
+C:\\Big Sur dock Icons\Terminal.png
+C:\\Big Sur dock Icons\Textedit.png
+C:\\Big Sur dock Icons\the onion.png
+C:\\Big Sur dock Icons\the pirate bay.png
+C:\\Big Sur dock Icons\theguardian.png
+C:\\Big Sur dock Icons\Time Machine.png
+C:\\Big Sur dock Icons\trashempty2@2x.png
+C:\\Big Sur dock Icons\trashempty@2x.png
+C:\\Big Sur dock Icons\trashfull2@2x.png
+C:\\Big Sur dock Icons\trashfull@2x.png
+C:\\Big Sur dock Icons\tumblr.png
+C:\\Big Sur dock Icons\tux.png
+C:\\Big Sur dock Icons\twitter.png
+C:\\Big Sur dock Icons\UKo.png
+C:\\Big Sur dock Icons\unity.png
+C:\\Big Sur dock Icons\Unsplash.png
+C:\\Big Sur dock Icons\usatoday.png
+C:\\Big Sur dock Icons\uTorrent.png
+C:\\Big Sur dock Icons\Vimeo.png
+C:\\Big Sur dock Icons\Vivaldi.png
+C:\\Big Sur dock Icons\vkontakte.png
+C:\\Big Sur dock Icons\VLC.png
+C:\\Big Sur dock Icons\Voice Memos.png
+C:\\Big Sur dock Icons\vscode.png
+C:\\Big Sur dock Icons\weatherdotcom.png
+C:\\Big Sur dock Icons\webmd.png
+C:\\Big Sur dock Icons\Webshots.png
+C:\\Big Sur dock Icons\wikipedi.png
+C:\\Big Sur dock Icons\Windows.png
+C:\\Big Sur dock Icons\winrar.png
+C:\\Big Sur dock Icons\WolframAlpha.png
+C:\\Big Sur dock Icons\word.png
+C:\\Big Sur dock Icons\Wordpress.png
+C:\\Big Sur dock Icons\xbox.png
+C:\\Big Sur dock Icons\Xing.png
+C:\\Big Sur dock Icons\Yahoo.png
+C:\\Big Sur dock Icons\YahooBuzz.png
+C:\\Big Sur dock Icons\yandex.png
+C:\\Big Sur dock Icons\Yandex_Browser.png
+C:\\Big Sur dock Icons\youtube.png
+C:\\Big Sur dock Icons\Zip 2.png
+C:\\Big Sur dock Icons\zip.png
+C:\\Big Sur dock Icons\zoom.png
+C:\\Dwimperl\DISTRIBUTIONS.txt
+C:\\Dwimperl\DWIM.txt
+C:\\Dwimperl\README.txt
+C:\\Dwimperl\relocation.pl.bat
+C:\\Dwimperl\strawberry-merge-module.reloc.txt
+C:\\Dwimperl\strawberry-ui.reloc.txt
+C:\\Dwimperl\unins000.dat
+C:\\Dwimperl\unins000.exe
+C:\\Dwimperl\update_env.pl.bat
+C:\\My Project\0439_dbmovies.sql
+C:\\My Project\19.83.0439_Responsi_Web.rar
+C:\\My Project\app.py
+C:\\My Project 2\app.py
+C:\\MyDock\cache.file
+C:\\MyDock\cache.ico
+C:\\MyDock\padconfig.xml
