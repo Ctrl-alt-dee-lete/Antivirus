@@ -1,6 +1,9 @@
 import base64
 import os
 import sys
+import logging
+import datetime
+import shutil
 
 os_name = sys.platform
 
@@ -38,3 +41,22 @@ def decode_base64(file):
         f.write(i + b"\n")
     f.close()
     os.remove(file)
+
+def quarantine_file(file):
+    try:
+        # Enhanced quarantine with logging
+        quarantine_dir = "AntiVirus/Quarantine/"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = os.path.basename(file)
+        quarantine_path = os.path.join(quarantine_dir, f"{timestamp}_{filename}")
+        
+        # Move file to quarantine
+        shutil.move(file, quarantine_path)
+        
+        # Log quarantine action
+        logging.info(f"File quarantined: {file} -> {quarantine_path}")
+        
+        return quarantine_path
+    except Exception as e:
+        logging.error(f"Quarantine failed: {e}")
+        return None
