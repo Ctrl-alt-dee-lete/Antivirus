@@ -5,24 +5,181 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 import tkinter, tkinter.scrolledtext
-import threading
 import os
 import sys
 import urllib.request
 import glob
 import time
 import hashlib
-import socket
-import subprocess
-#self-made
 import quarantaene 
 import SystemFileScanner
+import requests
 
 os_name = sys.platform
 verzeichnisse = []
 files = []
 partitionen = []
 terminations = []
+
+VIRUSTOTAL_API_KEY = 'YOUR_VIRUSTOTAL_API_KEY'
+VIRUSTOTAL_API_URL = 'https://www.virustotal.com/vtapi/v3/file'
+
+def create_md5(file_path):
+    """Generate MD5 hash for a file"""
+    hash_md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+def virustotal_scan(file_path):
+    """
+    Scan file using VirusTotal API
+    
+    Args:
+        file_path (str): Path to the file to be scanned
+    
+    Returns:
+        dict: Scan results from VirusTotal
+    """
+    try:
+        # Calculate file hash
+        file_hash = create_md5(file_path)
+        
+        # Prepare API parameters
+        headers = {
+            "accept": "application/json",
+            "x-apikey": "maltek",
+            "content-type": "multipart/form-data"
+        }
+        
+        response = requests.post(VIRUSTOTAL_API_URL, headers=headers)
+
+        print(response.text)
+        
+        # Check response
+        if response.status_code == 200:
+            result = response.json()
+            
+            # Analyze scan results
+            if result['response_code'] == 1:
+                # Detailed scan analysis
+                positives = result.get('positives', 0)
+                total = result.get('total', 0)
+                
+                # Logging and decision making
+                if positives > 0:
+                    text_box.insert(END, f"[ ! ] VirusTotal Detection: {positives}/{total} engines detected threat\n", "important")
+                    text_box.tag_config("important", foreground="red")
+                    
+                    # Optional: Detailed engine results
+                    for engine, detection in result.get('scans', {}).items():
+                        if detection['detected']:
+                            text_box.insert(END, f"[ ! ] {engine}: {detection['result']}\n")
+                    
+                    # Automatically quarantine if threat detected
+                    quarantaene.encode_base64(file_path, file_to_quarantine)
+                    return True
+                else:
+                    text_box.insert(END, "[ + ] VirusTotal: No threats detected\n", "positive")
+                    return False
+            else:
+                text_box.insert(END, "[ ! ] File not found in VirusTotal database\n")
+                # Fallback to local signature scanning
+                return local_signature_scan(file_path)
+        
+        else:
+            text_box.insert(END, "[ - ] VirusTotal API request failed\n", "negative")
+            # Fallback to local signature scanning
+            return local_signature_scan(file_path)
+    
+    except Exception as e:
+        text_box.insert(END, f"[ - ] Scan error: {str(e)}\n", "negative")
+        return local_signature_scan(file_path)
+
+def local_signature_scan(file_path):
+    """
+    Fallback local signature scanning method
+    
+    Args:
+        file_path (str): Path to the file to be scanned
+    
+    Returns:
+        bool: True if threat detected, False otherwise
+    """
+    try:
+        # Use existing scan_auto method as fallback
+        return scan_auto(file_path)
+    except Exception as e:
+        text_box.insert(END, f"[ - ] Local scan failed: {str(e)}\n", "negative")
+        return False
+
+def full_scan_with_local_signatures():
+    """
+    Full system scan using local signature list
+    """
+    # Use existing current_links.txt for signatures
+    with open('current_links.txt', 'r') as f:
+        signature_links = f.readlines()
+    
+    # Implement multi-threaded full system scan
+    # Use existing full_scan method with local signatures
+    # This can remain largely unchanged
+    full_scan(signature_links)
+
+def scan():
+    """
+    Enhanced file scanning method
+    """
+    file = askopenfilename()
+    
+    # Start timing
+    start_time = time.time()
+    
+    text_box.insert(END, f"[ * ] Scanning {file}\n")
+    
+    # Use VirusTotal for file scanning
+    is_threat = virustotal_scan(file)
+    
+    # Scan duration
+    scan_duration = time.time() - start_time
+    text_box.insert(END, f"[ * ] Scan duration: {scan_duration:.2f} seconds\n")
+    
+    if is_threat:
+        text_box.insert(END, "[ ! ] Potential threat detected\n", "important")
+    else:
+        text_box.insert(END, "[ + ] No threats found\n", "positive")
+
+# Additional error handling and rate limiting
+def check_virustotal_quota():
+    """
+    Check VirusTotal API usage and handle rate limits
+    """
+    # Implement API usage tracking
+    # Add delay between scans to respect API limits
+    pass
+
+# Rate limiting decorator
+def rate_limited(max_per_minute):
+    """
+    Decorator to limit API calls
+    """
+    min_interval = 60.0 / float(max_per_minute)
+    def decorator(func):
+        last_time_called = [0.0]
+        def wrapper(*args, **kwargs):
+            elapsed = time.time() - last_time_called[0]
+            left_to_wait = min_interval - elapsed
+            if left_to_wait > 0:
+                time.sleep(left_to_wait)
+            ret = func(*args, **kwargs)
+            last_time_called[0] = time.time()
+            return ret
+        return wrapper
+    return decorator
+
+# Apply rate limiting to VirusTotal scan
+virustotal_scan = rate_limited(4)(virustotal_scan)  # 4 calls per minute
 
 
 if "win" in os_name:
