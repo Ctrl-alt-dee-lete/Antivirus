@@ -1,3 +1,5 @@
+#Official script by n00nY
+
 from threading import *
 from tkinter import *
 from tkinter.filedialog import askopenfilename
@@ -6,22 +8,15 @@ import tkinter, tkinter.scrolledtext
 import threading
 import os
 import sys
-import ctypes
 import urllib.request
 import glob
 import time
 import hashlib
 import socket
 import subprocess
+#self-made
 import quarantaene 
 import SystemFileScanner
-import requests
-import hashlib
-import logging
-import json
-import win32api
-import win32security
-import ntsecuritycon as con
 
 os_name = sys.platform
 verzeichnisse = []
@@ -29,478 +24,17 @@ files = []
 partitionen = []
 terminations = []
 
-def has_read_permissions(path):
-    """
-    Check if the current user has read permissions for a path
-    """
-    try:
-        # Attempt to list directory contents
-        os.listdir(path)
-        return True
-    except PermissionError:
-        return False
-    except Exception:
-        return False
-
-def get_user_sid():
-    """
-    Get the current user's SID
-    """
-    try:
-        # Get current process token
-        hToken = win32security.OpenProcessToken(
-            win32api.GetCurrentProcess(), 
-            win32security.TOKEN_QUERY
-        )
-        
-        # Get user SID from token
-        user_sid, _ = win32security.GetTokenInformation(
-            hToken, 
-            win32security.TokenUser
-        )
-        return user_sid
-    except Exception as e:
-        logging.error(f"Could not retrieve user SID: {e}")
-        return None
-
-def check_folder_permissions(folder_path):
-    """
-    Advanced folder permission checking
-    """
-    try:
-        # Get current user's SID
-        user_sid = get_user_sid()
-        if not user_sid:
-            logging.warning("Could not determine user SID")
-            return False
-
-        # Get file/folder security descriptor
-        sd = win32security.GetFileSecurity(
-            folder_path, 
-            win32security.OWNER_SECURITY_INFORMATION | 
-            win32security.DACL_SECURITY_INFORMATION
-        )
-
-        # Get DACL (Discretionary Access Control List)
-        dacl = sd.GetSecurityDescriptorDacl()
-
-        # Check explicit permissions
-        for i in range(dacl.GetAceCount()):
-            ace = dacl.GetAce(i)
-            sid = ace[2]
-            
-            # Check if ACE applies to current user
-            if win32security.IsValidSid(sid):
-                access_mask = ace[1]
-                
-                # Check for read and list folder contents permissions
-                if (access_mask & (
-                    con.FILE_GENERIC_READ | 
-                    con.FILE_LIST_DIRECTORY
-                )) and sid == user_sid:
-                    return True
-
-        return False
-
-    except Exception as e:
-        logging.error(f"Permission check error for {folder_path}: {e}")
-        return False
-
-def safe_listdir(path):
-    """
-    Safely list directory contents with multiple permission checks
-    """
-    try:
-        # Multiple permission checking strategies
-        if not os.path.exists(path):
-            logging.warning(f"Path does not exist: {path}")
-            return []
-
-        if not os.path.isdir(path):
-            logging.warning(f"Not a directory: {path}")
-            return []
-
-        # Strategy 1: Basic permission check
-        if not has_read_permissions(path):
-            logging.warning(f"No read permissions: {path}")
-            return []
-
-        # Strategy 2: Advanced Windows permission check
-        if not check_folder_permissions(path):
-            logging.warning(f"Detailed permission check failed: {path}")
-            return []
-
-        # Attempt to list directory
-        entries = os.listdir(path)
-        return entries
-
-    except PermissionError:
-        logging.warning(f"PermissionError accessing: {path}")
-        return []
-    except OSError as e:
-        logging.error(f"OS Error accessing {path}: {e}")
-        return []
-    except Exception as e:
-        logging.error(f"Unexpected error accessing {path}: {e}")
-        return []
-
-def recursive_file_discovery(
-    root_path, 
-    max_depth=3, 
-    current_depth=0, 
-    ignored_paths=None
-):
-    """
-    Robust recursive file discovery
-    """
-    # Default ignored paths
-    if ignored_paths is None:
-        ignored_paths = {
-            # Windows system paths to ignore
-            r'C:\Windows',
-            r'C:\Program Files',
-            r'C:\Program Files (x86)',
-            r'C:\ProgramData',
-            # User profile paths with potential restrictions
-            r'C:\Users\Default',
-            r'C:\Users\Public',
-        }
-
-    discovered_files = []
-
-    # Depth and path validation
-    if (current_depth > max_depth or 
-        any(root_path.startswith(ignored) for ignored in ignored_paths)):
-        return discovered_files
-
-    try:
-        # Safe directory listing
-        entries = safe_listdir(root_path)
-
-        for entry_name in entries:
-            full_path = os.path.join(root_path, entry_name)
-
-            try:
-                # Skip symbolic links and system files
-                if os.path.islink(full_path):
-                    continue
-
-                # File handling
-                if os.path.isfile(full_path):
-                    discovered_files.append(full_path)
-
-                # Directory recursion
-                elif os.path.isdir(full_path):
-                    # Additional path filtering
-                    if (not entry_name.startswith('.') and 
-                        '$' not in entry_name and 
-                        entry_name.lower() not in {'temp', 'temporary'}):
-                        
-                        sub_files = recursive_file_discovery(
-                            full_path, 
-                            max_depth, 
-                            current_depth + 1,
-                            ignored_paths
-                        )
-                        discovered_files.extend(sub_files)
-
-            except Exception as e:
-                logging.error(f"Error processing {full_path}: {e}")
-
-    except Exception as e:
-        logging.error(f"Comprehensive scan error for {root_path}: {e}")
-
-    return discovered_files
-
-def scan_system_drives(max_depth=2):
-    """
-    Comprehensive and safe system drive scanning
-    """
-    total_files = 0
-    scanned_drives = []
-
-    # Get system drives
-    drives = [
-        f"{letter}:\\" for letter in 'CDEFGH' 
-        if os.path.exists(f"{letter}:\\")
-    ]
-
-    logging.info(f"Scanning {len(drives)} accessible drives")
-
-    for drive in drives:
-        try:
-            logging.info(f"Scanning drive: {drive}")
-
-            # Perform recursive file discovery
-            drive_files = recursive_file_discovery(
-                drive, 
-                max_depth=max_depth
-            )
-
-            total_files += len(drive_files)
-            scanned_drives.append(drive)
-
-            logging.info(f"Found {len(drive_files)} files in {drive}")
-
-        except Exception as e:
-            logging.error(f"Error scanning drive {drive}: {e}")
-
-    logging.info(f"Scan Complete. Total Files: {total_files}")
-    return total_files, scanned_drives
-
-class TextBoxHandler(logging.Handler):
-    def __init__(self, text_widget):
-        super().__init__()
-        self.text_widget = text_widget
-        self.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
-
-    def emit(self, record):
-        msg = self.format(record)
-        def append():
-            self.text_widget.configure(state='normal')
-            self.text_widget.insert(tkinter.END, msg + "\n")
-            self.text_widget.see(tkinter.END)
-            self.text_widget.configure(state='disabled')
-        
-        self.text_widget.after(0, append)
-
-def setup_logging(text_box):
-    # Remove any existing handlers
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-    
-    # Create and configure text box handler
-    text_handler = TextBoxHandler(text_box)
-    text_handler.setLevel(logging.INFO)
-    
-    # Configure root logger
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s: %(message)s',
-        handlers=[text_handler]
-    )
-
-#Virtot Scanner
-class VirusTotalScanner:
-    def __init__(self, api_key="maltek"):
-        self.api_key = api_key
-        self.base_url = "https://www.virustotal.com/api/v3/files"
-        self.headers = {
-            "accept": "application/json",
-            "x-apikey": self.api_key
-        }
-
-    def debug_request(self, method, url, **kwargs):
-        """
-        Debug method to log detailed request and response information
-        """
-        try:
-            logging.info(f"Making {method} request to {url}")
-            logging.info(f"Headers: {kwargs.get('headers', {})}")
-            
-            # Make the request
-            response = requests.request(method, url, **kwargs)
-            
-            # Log response details
-            logging.info(f"Response Status Code: {response.status_code}")
-            logging.info(f"Response Headers: {response.headers}")
-            
-            # Log raw response content
-            logging.info(f"Raw Response Content: {response.text}")
-            
-            # Try to parse JSON
-            try:
-                json_response = response.json()
-                logging.info(f"Parsed JSON Response: {json.dumps(json_response, indent=2)}")
-                return response
-            except json.JSONDecodeError as je:
-                logging.error(f"JSON Decode Error: {je}")
-                logging.error(f"Response Content: {response.text}")
-                return None
-        
-        except requests.RequestException as e:
-            logging.error(f"Request Exception: {e}")
-            return None
-
-    def get_file_hash(self, filepath):
-        """
-        Generate MD5 hash of a file
-        """
-        try:
-            if not os.path.exists(filepath):
-                logging.error(f"File not found: {filepath}")
-                return None
-
-            MAX_FILE_SIZE = 32 * 1024 * 1024  # 32 MB
-            if os.path.getsize(filepath) > MAX_FILE_SIZE:
-                logging.warning(f"File too large for scanning: {filepath}")
-                return None
-
-            hash_md5 = hashlib.md5()
-            with open(filepath, "rb") as f:
-                for chunk in iter(lambda: f.read(4096), b""):
-                    hash_md5.update(chunk)
-            
-            file_hash = hash_md5.hexdigest()
-            logging.info(f"Generated MD5 hash: {file_hash}")
-            return file_hash
-
-        except Exception as e:
-            logging.error(f"Hash generation error: {e}")
-            return None
-
-    def scan_file(self, filepath):
-        """
-        Advanced file scanning method with extensive error handling
-        """
-        try:
-            # Validate file and get hash
-            file_hash = self.get_file_hash(filepath)
-            if not file_hash:
-                return {
-                    'is_malicious': False,
-                    'error': 'Could not generate file hash'
-                }
-
-            # Construct URL for file report
-            check_url = f"{self.base_url}/{file_hash}"
-            
-            # Debug request
-            response = self.debug_request('GET', check_url, headers=self.headers)
-            
-            if not response:
-                return {
-                    'is_malicious': False,
-                    'error': 'Failed to get response from VirusTotal'
-                }
-
-            # Check response status
-            if response.status_code not in [200, 404]:
-                logging.error(f"Unexpected VirusTotal response: {response.status_code}")
-                return {
-                    'is_malicious': False,
-                    'error': f'API error: {response.status_code}'
-                }
-
-            # Try to parse JSON safely
-            try:
-                result = response.json()
-            except json.JSONDecodeError:
-                logging.error("Failed to decode JSON response")
-                logging.error(f"Raw response: {response.text}")
-                return {
-                    'is_malicious': False,
-                    'error': 'Invalid JSON response'
-                }
-
-            # Handle different response scenarios
-            if response.status_code == 404:
-                # File not in database, upload for scanning
-                return self.upload_file_for_scanning(filepath)
-
-            # Analyze detection results
-            try:
-                if 'data' in result and 'attributes' in result['data']:
-                    stats = result['data']['attributes']['last_analysis_stats']
-                    
-                    malicious_count = stats.get('malicious', 0)
-                    total_engines = sum(stats.values())
-                    
-                    return {
-                        'is_malicious': malicious_count > 0,
-                        'positives': malicious_count,
-                        'total': total_engines,
-                        'details': stats
-                    }
-                else:
-                    logging.warning("Unexpected VirusTotal response structure")
-                    return {
-                        'is_malicious': False,
-                        'error': 'Unexpected response structure'
-                    }
-            
-            except Exception as parse_err:
-                logging.error(f"Error parsing VirusTotal response: {parse_err}")
-                return {
-                    'is_malicious': False,
-                    'error': f'Response parsing error: {parse_err}'
-                }
-
-        except Exception as e:
-            logging.error(f"Comprehensive scanning error: {e}")
-            return {
-                'is_malicious': False,
-                'error': f'Unexpected error: {e}'
-            }
-
-    def upload_file_for_scanning(self, filepath):
-        """
-        Upload file to VirusTotal for scanning
-        """
-        try:
-            with open(filepath, 'rb') as file:
-                files = {'file': file}
-                
-                # Debug the upload request
-                response = self.debug_request(
-                    'POST', 
-                    "https://www.virustotal.com/api/v3/files", 
-                    headers=self.headers, 
-                    files=files
-                )
-                
-                if not response:
-                    return {
-                        'is_malicious': False,
-                        'error': 'File upload failed'
-                    }
-
-                # Parse upload result
-                try:
-                    upload_result = response.json()
-                    return {
-                        'is_malicious': False,
-                        'analysis_id': upload_result.get('data', {}).get('id'),
-                        'message': 'File uploaded for scanning'
-                    }
-                except json.JSONDecodeError:
-                    logging.error("Failed to decode upload response")
-                    return {
-                        'is_malicious': False,
-                        'error': 'Invalid upload response'
-                    }
-        
-        except Exception as e:
-            logging.error(f"File upload comprehensive error: {e}")
-            return {
-                'is_malicious': False,
-                'error': f'Upload error: {e}'
-            }
-        
-def scan_virustotal(self, file_hash):
-        url = self.virustotal_api_endpoint.format(file_hash)
-        headers = {
-            "accept": "application/json",
-            "x-apikey": self.api_key,
-            "content-type": "multipart/form-data"
-        }
-        response = requests.get(url, headers=headers)
-        return response.json()
 
 if "win" in os_name:
     if not os.path.exists("AntiVirus\\Quarantine\\"):
         os.makedirs("AntiVirus\\Quarantine\\")
     if not os.path.exists("AntiVirus\\sf\\"):
         os.makedirs("AntiVirus\\sf\\")
-    if not os.path.exists("AntiVirus\\wl\\"):
-        os.makedirs("AntiVirus\\wl\\")
     if not os.path.exists("AntiVirus\\Large_Update_File\\"):
         os.makedirs("AntiVirus\\Large_Update_File")
     quarantine_folder = "AntiVirus\\Quarantine\\*"
     file_to_quarantine = "AntiVirus\\Quarantine\\"
     partitionen_folder = "AntiVirus\\sf\\sf.txt"
-    whitelist_path = "Antivirus\\wl\\wl.txt"
-    detected_drives = SystemFileScanner.add_drives_to_whitelist(whitelist_path)
     links_current = "AntiVirus\\Large_Update_File\\links_current.txt"
     links_downloaded = "AntiVirus\\Large_Update_File\\links_downloaded.txt"
     large_signatures = "AntiVirus\\Large_Update_File\\signatures.txt"
@@ -517,8 +51,6 @@ else:
         os.makedirs("AntiVirus//Quarantine//")
     if not os.path.exists("AntiVirus//sf//"):
         os.makedirs("AntiVirus//sf//")
-    if not os.path.exists("AntiVirus//wl//"):
-        os.makedirs("AntiVirus//wl//")
     if not os.path.exists("AntiVirus//Large_Update_File//"):
         os.makedirs("AntiVirus//Large_Update_File//")
     quarantine_folder = "AntiVirus//Quarantine//*"
@@ -536,8 +68,6 @@ else:
     f = open(large_signatures, "a")
     f.close()
 
-print("Detected drives:", detected_drives)
-    
 files_len = counter = 0
 main = None
 update_button = None
@@ -602,165 +132,30 @@ def clock_thread():
         e.update()
         time.sleep(1)
         
-def scan_system_files(scan_depth=3):
-    """
-    Comprehensive system file scanning method
-    
-    :param scan_depth: Depth of directory traversal
-    """
-    # Global logging setup
-    logging.info("Starting comprehensive system file scanning")
-    
-    # Track scan statistics
-    total_files_found = 0
-    scanned_directories = []
-    
-    try:
-        # Detect system drives
-        drives = get_system_drives()
-        
-        logging.info(f"Detected drives for scanning: {drives}")
-        
-        # Scan each drive
-        for drive in drives:
-            logging.info(f"Scanning drive: {drive}")
-            
-            # Recursive file discovery
-            files_in_drive = recursive_file_discovery(drive, max_depth=scan_depth)
-            
-            total_files_found += len(files_in_drive)
-            scanned_directories.append(drive)
-            
-            # Optional: Log files found in each drive
-            logging.info(f"Found {len(files_in_drive)} files in {drive}")
-    
-    except Exception as e:
-        logging.error(f"System file scanning error: {e}")
-    
-    # Final scan report
-    logging.info(f"Scan Complete")
-    logging.info(f"Total Files Found: {total_files_found}")
-    logging.info(f"Directories Scanned: {scanned_directories}")
-    
-    return total_files_found
-
-def get_system_drives():
-    """
-    Detect all available system drives
-    """
-    drives = []
-    
-    # Windows drive detection
-    if os.name == 'nt':
-        import string
-        for letter in string.ascii_uppercase:
-            drive_path = f"{letter}:\\"
-            if os.path.exists(drive_path):
-                drives.append(drive_path)
-    
-    # Unix/Linux drive detection
-    else:
-        drives = ['/']  # Root directory
-        # Optional: Add mount points
-        try:
-            with open('/proc/mounts', 'r') as mounts:
-                for line in mounts:
-                    if line.startswith('/dev/'):
-                        mount_point = line.split()[1]
-                        drives.append(mount_point)
-        except:
-            pass
-    
-    return drives
-
-def recursive_file_discovery(root_path, max_depth=3, current_depth=0):
-    """
-    Recursively discover files with depth limitation
-    
-    :param root_path: Starting directory
-    :param max_depth: Maximum recursion depth
-    :param current_depth: Current recursion level
-    :return: List of file paths
-    """
-    discovered_files = []
-    
-    # Prevent excessive recursion
-    if current_depth > max_depth:
-        return discovered_files
-    
-    try:
-        # List all entries in the directory
-        for entry in os.scandir(root_path):
-            try:
-                # File handling
-                if entry.is_file():
-                    discovered_files.append(entry.path)
-                
-                # Directory recursion
-                elif entry.is_dir() and not entry.is_symlink():
-                    # Skip system and hidden directories
-                    if not entry.name.startswith('.') and 'Windows' not in entry.path:
-                        sub_files = recursive_file_discovery(
-                            entry.path, 
-                            max_depth, 
-                            current_depth + 1
-                        )
-                        discovered_files.extend(sub_files)
-            
-            except PermissionError:
-                # Log permission issues without stopping
-                logging.warning(f"Permission denied: {entry.path}")
-            except Exception as e:
-                logging.error(f"Error scanning {entry.path}: {e}")
-    
-    except Exception as e:
-        logging.error(f"Directory scan error for {root_path}: {e}")
-    
-    return discovered_files
-
-# Example Usage
-def start_system_scan():
-    """
-    Main system scanning entry point
-    """
-    try:
-        # Start timing
-        start_time = time.time()
-        
-        # Perform system scan
-        total_files = scan_system_files(scan_depth=3)
-        
-        # Calculate scan duration
-        scan_duration = time.time() - start_time
-        
-        logging.info(f"System Scan Completed")
-        logging.info(f"Total Files Processed: {total_files}")
-        logging.info(f"Scan Duration: {scan_duration:.2f} seconds")
-    
-    except Exception as e:
-        logging.error(f"System scan initialization error: {e}")
-
-# Integrate with your existing code
 def ScanSystemFiles():
     global files
     global text_box
     global files_len
-    
-    # Clear previous files
-    files.clear()
-    
-    # Start system scan
-    total_files = start_system_scan()
-    
-    # Update UI
-    text_box.insert(END, f"[ + ] System scan complete. Found {total_files} files\n")
+
+    text_box.insert(END, "[ * ] Scanning system for files...\n")
+    text_box.see(END)
+    text_box.update()
+    time.sleep(3)
+    text_box.see(END)
+    text_box.update()
+    SystemFileScanner.partitions(partitionen_folder)
+    f = open(partitionen_folder, "r")
+    content = f.read()
+    f.close()
+    content = content.splitlines()
+    files = content
+    files_len = len(files)
+    text_box.insert(END, "[ + ] System successfully prepared\n", 'positive')
+    text_box.tag_config("positive", foreground="green")
     text_box.see(END)
     text_box.update()
     
 def full_scan(part):
-    logging.info("Starting full scan...")
-    logging.info("Full scan completed.")
-    
     global verzeichnisse
     global files
     global text_box
@@ -770,8 +165,6 @@ def full_scan(part):
     global lock
     global t_time
     global counter
-    
-    start = time.time()
     
     if part == 1:#Thread-1
         i = int(len(files)*0.125)
@@ -1033,7 +426,7 @@ def scan():
 
     match = False
     file = askopenfilename()
-    start = time.time()
+    start = time.time() 
     text_box.insert(END, "[ * ] Scanning " + file + "\n")
     text_box.see(END)
     text_box.update()
@@ -1060,66 +453,42 @@ def scan():
         return None
 
     signatures = open(large_signatures, "rb")
+    #runtime of a scan varies from system to system(time on the systems tested: 1s <= t <= 20s)
     try:
-        if content in signatures.read():  # fastest solution
+        if content in signatures.read():#fastest solution
             signatures.close()
             match = True
         else:
+            match = False
             signatures.close()
     except MemoryError:
         try:
             signatures.close()
             signatures = open(large_signatures, "rb")
-            if content in signatures.readlines():  # again fast, but around 4 times slower than the fastest
-                signatures.close()
+            if content in signatures.readlines():#again fast, but around 4 times slower than the fastest
+                f.close()
                 match = True
             else:
                 signatures.close()
+                match = False
         except MemoryError:
             signatures.close()
             signatures = open(large_signatures, "rb")
-            while True:  # slowest solution, but can read files sized over 2 GB
+            while True:#slowest solution, but can read files sized over 2 GB
                 tmp = signatures.readline()
                 if tmp == b"":
                     signatures.close()
                     break
-
                 if tmp == content:
-                    signatures.close()
                     match = True
-
-    # NEW: VirusTotal Scanning
-    try:
-        # Create VirusTotal Scanner instance
-        vt_scanner = VirusTotalScanner(api_key="maltek")
-        
-        # Scan the file using VirusTotal
-        vt_result = vt_scanner.scan_file(file)
-        
-        # Combine local and VirusTotal scan results
-        if match or (vt_result and vt_result.get('is_malicious', False)):
-            text_box.insert(END, "[ ! ] Potential threat detected!\n", "important")
-            text_box.tag_config("important", foreground="red")
-            
-            # Add VirusTotal details if available
-            if vt_result and vt_result.get('is_malicious'):
-                text_box.insert(END, f"[ ! ] VirusTotal: {vt_result.get('positives', 0)} out of {vt_result.get('total', 0)} scanners detected issues\n")
-            
-            # Quarantine the file
-            quarantaene.encode_base64(file, file_to_quarantine)
-            text_box.insert(END, f"[ ! ] Threat found: {file} moved to quarantine\n", "important")
-        else:
-            text_box.insert(END, "[ + ] No threat was found\n", "positive")
-            text_box.tag_config("positive", foreground="green")
-    
-    except Exception as e:
-        text_box.insert(END, f"[ ! ] VirusTotal scanning error: {str(e)}\n", "negative")
+                    signatures.close()
+    except:
+        text_box.insert(END, "[ - ] Something bad happened while performing the task\n", "negative")
         text_box.tag_config("negative", foreground="red")
-
-    text_box.see(END)
-    text_box.update()
-
-    # Runtime calculation
+        text_box.see(END)
+        text_box.update()
+        return None
+    
     text_box.insert(END, "[ * ] Scan duration: {0}\n".format(round(time.time()-start, 2)))
     text_box.see(END)
     text_box.update()
@@ -1322,6 +691,7 @@ def button_action_handler(s):
         
 def gui_thread():
     global main
+    global update_button
     global scan_button
     global fullscan_button
     global quit_button
@@ -1354,25 +724,16 @@ def gui_thread():
 
     
     #Buttons
-    scan_button = tkinter.Button(main, bg=bgc, fg=fgc, text="Scan", 
-                                 command=lambda: button_action_handler("scan_button"), 
-                                 height=hoehe, width=breite)
-    scan_button.grid(row=0, column=0)
-
-    fullscan_button = tkinter.Button(main, bg=bgc, fg=fgc, text="Full scan", 
-                                     command=lambda: button_action_handler("fullscan_button"), 
-                                     height=hoehe, width=breite)
-    fullscan_button.grid(row=1, column=0)
-
-    quarantine_button = tkinter.Button(main, bg=bgc, fg=fgc, text="Quarantine", 
-                                       command=lambda: button_action_handler("quarantine_button"), 
-                                       height=hoehe, width=breite)
-    quarantine_button.grid(row=2, column=0)
-
-    quit_button = tkinter.Button(main, bg=bgc, fg=fgc, text="Close", 
-                                 command=lambda: button_action_handler("quit_button"), 
-                                 height=hoehe, width=breite)
-    quit_button.grid(row=3, column=0, sticky="w")
+    update_button = tkinter.Button(main, bg=bgc, fg=fgc, text = "Update", command=lambda:button_action_handler("update_button"), height = hoehe, width = breite)
+    update_button.grid(row = 0, column = 0)
+    scan_button = tkinter.Button(main, bg=bgc, fg=fgc, text = "Scan", command=lambda:button_action_handler("scan_button"), height = hoehe, width = breite)
+    scan_button.grid(row = 1, column = 0)
+    fullscan_button = tkinter.Button(main, bg=bgc, fg=fgc, text = "Full scan", command=lambda:button_action_handler("fullscan_button"), height = hoehe, width = breite)
+    fullscan_button.grid(row = 2, column = 0)
+    quarantine_button = tkinter.Button(main, bg=bgc, fg=fgc, text = "Quarantine", command=lambda:button_action_handler("quarantine_button"), height = hoehe, width = breite)
+    quarantine_button.grid(row = 3, column = 0)
+    quit_button = tkinter.Button(main, bg=bgc, fg=fgc, text = "Close", command=lambda:button_action_handler("quit_button"), height = hoehe, width = breite)
+    quit_button.grid(row = 4, column = 0, sticky="w")
     b_delete = tkinter.Button(main, bg=bgc, fg=fgc, text = "Remove current", height=0, width = 25, justify=CENTER)
     b_delete_all = tkinter.Button(main, bg=bgc, fg=fgc, text = "Remove all", height = 0, width = 25, justify=CENTER)
     b_restore = tkinter.Button(main, bg=bgc, fg=fgc, text = "Restore current", height=0, width = 25, justify=CENTER)

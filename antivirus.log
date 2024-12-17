@@ -1,4 +1,0 @@
-2024-12-17 09:49:47,282 - INFO: Generated MD5 hash for E:/CTF/CTF RajaWali/Ghost Text/hide.png: 19f0b6f606c359d171c84db9f455140e
-2024-12-17 09:49:47,282 - ERROR: Unexpected error in VirusTotal scanning: 'VirusTotalScanner' object has no attribute 'headers'
-2024-12-17 09:49:58,993 - INFO: Generated MD5 hash for E:/CTF/CTF RESPONSI/ctf.py: 349880910fe3f12cbcbe11f0aa930b1c
-2024-12-17 09:49:58,993 - ERROR: Unexpected error in VirusTotal scanning: 'VirusTotalScanner' object has no attribute 'headers'

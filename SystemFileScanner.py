@@ -1,47 +1,11 @@
 import glob
 import time
-import sys
-import os
-import string
+import sys, os
 
 os_name = sys.platform
 partitionen = []
 verzeichnisse = []
 files = []
-
-def get_drives():
-    """Detect all available drives on the system"""
-    drives = []
-    if sys.platform.startswith('win'):
-        # Get all possible drive letters
-        for letter in string.ascii_uppercase:
-            drive_path = f"{letter}:\\"
-            if os.path.exists(drive_path):
-                drives.append(drive_path)
-    else:
-        drives = ['/']
-    return drives
-
-def add_drives_to_whitelist(whitelist_path):
-    drives = get_drives()
-    
-    existing_entries = set()
-    if os.path.exists(whitelist_path):
-        with open(whitelist_path, 'r') as f:
-            existing_entries = set(f.read().splitlines())
-    
-    # Add new drives to whitelist
-    with open(whitelist_path, 'w') as f:
-        # First, write existing entries
-        for entry in existing_entries:
-            f.write(f"{entry}\n")
-        
-        # Then add new drives
-        for drive in drives:
-            if drive not in existing_entries:
-                f.write(f"{drive}\n")
-    
-    return drives
 
 def partitions(sfsFolder):
     global partitionen
@@ -57,11 +21,6 @@ def partitions(sfsFolder):
                 continue
         return indeces(sfsFolder)
     if "win" not in os_name:
-        return indeces(sfsFolder)
-    if "win" in sys.platform:
-        partitionen = get_drives()
-        return indeces(sfsFolder)
-    if "win" not in sys.platform:
         return indeces(sfsFolder)
     
 def indeces(sfsFolder):
