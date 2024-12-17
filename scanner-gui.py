@@ -3,7 +3,7 @@ from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
 import os
 import time
-from scanner import MalwareScanner  # Import the MalwareScanner class
+from scanner import MalwareScanner  #untuk memanggil logic/file scanner.py
 
 class MalwareScannerGUI:
     def __init__(self, master):
@@ -101,7 +101,6 @@ class MalwareScannerGUI:
             self.result_label.config(text="")
 
     def scan_file(self):
-        # ===== LOGIC ASLI (Tidak Diubah Sama Sekali) =====
         # Check if a file is selected
         if not self.file_path.get():
             messagebox.showwarning("Warning", "Please select a file first")
