@@ -138,7 +138,7 @@ class MalwareScannerGUI:
                 except Exception as e:
                     messagebox.showerror("Error", f"Could not delete file: {str(e)}")
             
-            self.result_label.config(text="Malware Cleaned!", fg="red")
+            self.result_label.config(text="Thanks For Scanning", fg="Green")
         else:
             # Clean file
             self.result_label.config(text="File is Safe", fg="green")
